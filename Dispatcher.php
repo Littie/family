@@ -62,9 +62,9 @@ class Dispatcher
 
     private function resolveSession(string $action)
     {
-        if (isset($_SESSION['user']) && $action !== 'home') {
+        if (isset($_SESSION['user']) && !in_array($action, $this->middleware())) {
             header('Location: /home');
-        } elseif (!isset($_SESSION['user']) && $action === 'home') {
+        } elseif (!isset($_SESSION['user']) && in_array($action, $this->middleware())) {
             header('Location: /index');
         }
 
@@ -81,5 +81,15 @@ class Dispatcher
         if (isset($uri)) {
             return explode('/', filter_var(trim($uri, '/')), FILTER_SANITIZE_URL);
         }
+    }
+
+    /**
+     *
+     */
+    private function middleware()
+    {
+        return [
+            'home', 'upload',
+        ];
     }
 }

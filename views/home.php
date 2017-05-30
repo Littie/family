@@ -20,7 +20,8 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-3"><h4>Home page</h4></div>
-                        <div class="col-sm-9"><a href="/logout" class="pull-right"><button class="btn btn-primary">Logout</button></a></div>
+                        <div class="col-sm-4"><a href="/upload" class="pull-right"><button class="btn btn-primary">Upload</button></a></div>
+                        <div class="col-sm-5"><a href="/logout" class="pull-right"><button class="btn btn-primary">Logout</button></a></div>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -29,7 +30,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Active</th>
+                            <th>Completed</th>
                         </tr>
                         </thead>
                         <tbody>

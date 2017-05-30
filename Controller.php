@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * Class Controller.
@@ -16,6 +16,15 @@ class Controller
         $this->view = new View();
         $this->connection = $connection;
         $this->dispatcher = $dispatcher;
+    }
+
+    public function upload()
+    {
+        if ($this->checkAction('upload')) {
+            $this->uploadFile();
+        }
+
+        $this->view->generate('home.php');
     }
 
     /**
@@ -73,6 +82,43 @@ class Controller
         }
 
         $this->view->generate('register.php');
+    }
+
+    private function uploadFile()
+    {
+        $file = $_FILES['file']['tmp_name'];
+        $uploadDir = __DIR__ . '/storage/';
+        $uploadFile = $uploadDir . basename($file);
+        $insertQuery = [];
+        $insertData = [];
+
+        if (move_uploaded_file($file, $uploadFile)) {
+            $row = 0;
+
+            if (($handle = fopen($uploadFile, 'r')) !== false) {
+                while (($data = fgetcsv($handle, 1000, ',')) !== false) {
+                    if ($row++ == 0) {
+                        continue;
+                    }
+
+                    $insertQuery[] = '(?, ?)';
+                    $insertData[] = $data[0];
+                    $insertData[] = $data[1];
+                }
+            }
+
+            $sql = "INSERT INTO tasks (name, is_complete) VALUES ";
+            $sql .= implode(', ', $insertQuery);
+
+            try {
+                $statement = $this->connection->prepare($sql);
+                $statement->execute($insertData);
+            } catch (PDOException $ex) {
+                unlink($uploadFile);
+            }
+
+            unlink($uploadFile);
+        }
     }
 
     private function loginUser()
