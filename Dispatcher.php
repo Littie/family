@@ -11,6 +11,33 @@ class Dispatcher
         $this->uri = $this->parseUrl();
     }
 
+    /**
+     * @param string $user
+     */
+    public function setSession(string $user)
+    {
+        $_SESSION['user'] = $user;
+    }
+
+    /**
+     * @param Controller $controller
+     * @param string $action
+     */
+    public function callController(Controller $controller, string $action = 'index')
+    {
+        $action = $this->resolveSession($action);
+
+        call_user_func_array([$controller, $action], []);
+    }
+
+    /**
+     * @param $host
+     * @param $user
+     * @param $password
+     * @param $name
+     *
+     * @return PDO
+     */
     public function getConnection($host, $user, $password, $name)
     {
         return Connection::getConnection($host, $user, $password, $name);
@@ -19,9 +46,20 @@ class Dispatcher
     /**
      * @return string
      */
-    public function getAtcion(): string
+    public function getAction(): string
     {
-        return $this->uri[0];
+        return '' === $this->uri[0] ? 'index' : $this->uri[0];
+    }
+
+    private function resolveSession(string $action)
+    {
+        if (isset($_SESSION['user']) && $action !== 'home') {
+            header('Location: /home');
+        } elseif (!isset($_SESSION['user']) && $action === 'home') {
+            header('Location: /index');
+        }
+
+        return $action;
     }
 
     /**
@@ -31,7 +69,7 @@ class Dispatcher
     {
         $uri = $_SERVER['REQUEST_URI'];
 
-        if(isset($uri)) {
+        if (isset($uri)) {
             return explode('/', filter_var(trim($uri, '/')), FILTER_SANITIZE_URL);
         }
     }

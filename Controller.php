@@ -9,11 +9,13 @@ class Controller
 {
     private $view;
     private $connection;
+    private $dispatcher;
 
-    public function __construct($connection)
+    public function __construct($connection, Dispatcher $dispatcher)
     {
         $this->view = new View();
         $this->connection = $connection;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -80,7 +82,9 @@ class Controller
                 ":password" => md5($_POST['password'])
             ]);
 
-            if (null !== $statement->fetch(PDO::FETCH_ASSOC)) {
+            if (null !== ($data = $statement->fetch(PDO::FETCH_ASSOC))) {
+                $this->dispatcher->setSession($data['name']);
+
                 return true;
             }
 
@@ -107,6 +111,8 @@ class Controller
             $statement->bindparam(":member", $_POST['member']);
 
             $statement->execute();
+
+            $this->dispatcher->setSession($_POST['name']);
 
             return true;
         } catch (PDOException $ex) {
