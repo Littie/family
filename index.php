@@ -3,10 +3,10 @@
 session_start();
 
 include_once 'config.php';
-include_once 'Connection.php';
-include_once 'Dispatcher.php';
-include_once 'View.php';
-include_once 'Controller.php';
+include_once 'Core/Connection.php';
+include_once 'Core/Dispatcher.php';
+include_once 'Core/View.php';
+include_once 'Core/Controller.php';
 
 
 $dispatcher = new Dispatcher();
