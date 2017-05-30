@@ -18,6 +18,20 @@ class Controller
         $this->dispatcher = $dispatcher;
     }
 
+    public function update()
+    {
+        try {
+            $statement = $this->connection->prepare('UPDATE tasks SET is_complete = 1 WHERE id = :id');
+            $statement->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+            $statement->execute();
+        } catch (PDOException $ex) {
+            echo json_encode($ex->getMessage());
+        }
+    }
+
+    /**
+     *
+     */
     public function upload()
     {
         if ($this->checkAction('upload')) {
@@ -40,7 +54,7 @@ class Controller
      */
     public function home()
     {
-        $statement = $this->connection->prepare("SELECT * FROM tasks");
+        $statement = $this->connection->prepare("SELECT * FROM tasks WHERE is_complete = 0");
         $statement->execute();
         $data = $statement->fetchAll(PDO::FETCH_ASSOC);
 
