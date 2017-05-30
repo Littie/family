@@ -7,17 +7,31 @@ declare(strict_types=1);
  */
 class Controller
 {
+    /**
+     * @var View
+     */
     private $view;
+
+    /**
+     * @var PDO
+     */
     private $connection;
+
+    /**
+     * @var Dispatcher
+     */
     private $dispatcher;
 
-    public function __construct($connection, Dispatcher $dispatcher)
+    public function __construct(PDO $connection, Dispatcher $dispatcher)
     {
         $this->view = new View();
         $this->connection = $connection;
         $this->dispatcher = $dispatcher;
     }
 
+    /**
+     * Set task as complete.
+     */
     public function update()
     {
         try {
@@ -30,7 +44,7 @@ class Controller
     }
 
     /**
-     *
+     * Show upload file.
      */
     public function upload()
     {
@@ -61,6 +75,9 @@ class Controller
         $this->view->generate('home.php', $data);
     }
 
+    /**
+     * Logout user.
+     */
     public function logout()
     {
         $this->dispatcher->destroySession();
@@ -98,6 +115,9 @@ class Controller
         $this->view->generate('register.php');
     }
 
+    /**
+     * Upload file and insert date to db.
+     */
     private function uploadFile()
     {
         $file = $_FILES['file']['tmp_name'];
@@ -135,7 +155,12 @@ class Controller
         }
     }
 
-    private function loginUser()
+    /**
+     * Login user
+     *
+     * @return bool
+     */
+    private function loginUser(): bool
     {
         try {
             $statement = $this

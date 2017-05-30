@@ -2,15 +2,27 @@
 
 declare(strict_types = 1);
 
+/**
+ * Class Dispatcher.
+ */
 class Dispatcher
 {
+    /**
+     * @var array
+     */
     private $uri;
 
+    /**
+     * Dispatcher constructor.
+     */
     public function __construct()
     {
         $this->uri = $this->parseUrl();
     }
 
+    /**
+     * Destroy user's session.
+     */
     public function destroySession()
     {
         session_destroy();
@@ -21,6 +33,8 @@ class Dispatcher
     }
 
     /**
+     * Set session for user.
+     *
      * @param string $user
      */
     public function setSession(string $user)
@@ -29,6 +43,8 @@ class Dispatcher
     }
 
     /**
+     * Call specific controller action.
+     *
      * @param Controller $controller
      * @param string $action
      */
@@ -40,6 +56,8 @@ class Dispatcher
     }
 
     /**
+     * Return connection db resource.
+     *
      * @param $host
      * @param $user
      * @param $password
@@ -47,12 +65,14 @@ class Dispatcher
      *
      * @return PDO
      */
-    public function getConnection($host, $user, $password, $name)
+    public function getConnection($host, $user, $password, $name): PDO
     {
         return Connection::getConnection($host, $user, $password, $name);
     }
 
     /**
+     * Get controller action name.
+     *
      * @return string
      */
     public function getAction(): string
@@ -60,7 +80,14 @@ class Dispatcher
         return '' === $this->uri[0] ? 'index' : $this->uri[0];
     }
 
-    private function resolveSession(string $action)
+    /**
+     * Check if session data is set.
+     *
+     * @param string $action
+     *
+     * @return string
+     */
+    private function resolveSession(string $action): string
     {
         if (isset($_SESSION['user']) && !in_array($action, $this->middleware())) {
             header('Location: /home');
@@ -72,6 +99,8 @@ class Dispatcher
     }
 
     /**
+     * Parse request uri.
+     *
      * @return array
      */
     private function parseUrl(): array
@@ -84,7 +113,7 @@ class Dispatcher
     }
 
     /**
-     *
+     * Middleware for authorized pages.
      */
     private function middleware()
     {

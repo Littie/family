@@ -2,9 +2,21 @@
 
 declare(strict_types = 1);
 
-
+/**
+ * Class Connection.
+ */
 class Connection
 {
+    /**
+     * Return connection resource.
+     *
+     * @param $host
+     * @param $user
+     * @param $password
+     * @param $name
+     *
+     * @return PDO
+     */
     public static function getConnection($host, $user, $password, $name)
     {
         try {
