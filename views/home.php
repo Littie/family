@@ -37,7 +37,10 @@
                             <tr>
                                 <td><?= $row['id'] ?></td>
                                 <td><?= $row['name'] ?></td>
-                                <td><?= $row['is_complete'] ?></td>
+<!--                                <td>--><?//= $row['is_complete'] ?><!--</td>-->
+                                <td>
+                                    <input type="checkbox" name="completed" value="<?= $row['is_complete'] ?>" <?php if ($row['is_complete']) {?> checked <?php } ?>>
+                                </td>
                             </tr>
                             <?php } ?>
                         </tbody>
