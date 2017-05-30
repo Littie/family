@@ -11,6 +11,15 @@ class Dispatcher
         $this->uri = $this->parseUrl();
     }
 
+    public function destroySession()
+    {
+        session_destroy();
+
+        unset($_SESSION['user']);
+
+        header("Location: /index");
+    }
+
     /**
      * @param string $user
      */

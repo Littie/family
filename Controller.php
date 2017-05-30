@@ -38,6 +38,11 @@ class Controller
         $this->view->generate('home.php', $data);
     }
 
+    public function logout()
+    {
+        $this->dispatcher->destroySession();
+    }
+
     /**
      * Show login page.
      */
