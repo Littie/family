@@ -50,9 +50,10 @@ class Controller
     {
         if ($this->checkAction('upload')) {
             $this->uploadFile();
+            $this->redirect('home');
         }
 
-        $this->view->generate('home.php');
+        $this->view->generate('upload.php');
     }
 
     /**
@@ -121,7 +122,7 @@ class Controller
     private function uploadFile()
     {
         $file = $_FILES['file']['tmp_name'];
-        $uploadDir = __DIR__ . '/storage/';
+        $uploadDir = dirname(__DIR__) . '/storage/';
         $uploadFile = $uploadDir . basename($file);
         $insertQuery = [];
         $insertData = [];
