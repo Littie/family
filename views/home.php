@@ -15,14 +15,16 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>User</th>
                             <th>Completed</th>
                         </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($data as $row){ ?>
+                            <?php foreach ($tasks as $row){ ?>
                             <tr>
                                 <td><?= $row['id'] ?></td>
                                 <td><?= $row['name'] ?></td>
+                                <td><?= $user['name'] ?></td>
                                 <td>
                                     <input type="checkbox" name="completed" value="<?= $row['is_complete'] ?>" <?php if ($row['is_complete']) {?> checked <?php } ?>>
                                 </td>

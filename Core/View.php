@@ -15,6 +15,15 @@ class View
      */
     function generate($content_view, $data = null)
     {
+        if (null !== $data) {
+            if (!is_array($data)) {
+                (array) $data;
+            }
+
+            extract($data);
+        }
+
+
         include 'views/template.php';
     }
 }

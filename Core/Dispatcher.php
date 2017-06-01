@@ -13,11 +13,24 @@ class Dispatcher
     private $uri;
 
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
      * Dispatcher constructor.
      */
     public function __construct()
     {
         $this->uri = $this->parseUrl();
+    }
+
+    public function resolveUser()
+    {
+        $statement = $this->connection->prepare("SELECT * FROM users WHERE id = " . $_SESSION['user']['id']);
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -35,9 +48,9 @@ class Dispatcher
     /**
      * Set session for user.
      *
-     * @param string $user
+     * @param array $user
      */
-    public function setSession(string $user)
+    public function setSession(array $user)
     {
         $_SESSION['user'] = $user;
     }
@@ -67,7 +80,9 @@ class Dispatcher
      */
     public function getConnection($host, $user, $password, $name): PDO
     {
-        return Connection::getConnection($host, $user, $password, $name);
+        $this->connection = Connection::getConnection($host, $user, $password, $name);
+
+        return $this->connection;
     }
 
     /**

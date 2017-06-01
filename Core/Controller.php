@@ -69,11 +69,14 @@ class Controller
      */
     public function home()
     {
-        $statement = $this->connection->prepare("SELECT * FROM tasks WHERE is_complete = 0");
-        $statement->execute();
-        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $user = $this->dispatcher->resolveUser();
 
-        $this->view->generate('home.php', $data);
+        $statement = $this->connection->prepare("SELECT * FROM tasks WHERE is_complete = 0 and user_id = " . $user[0]['id']);
+        $statement->execute();
+        $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+
+        $this->view->generate('home.php', ['tasks' => $tasks, 'user' => $user[0]]);
     }
 
     /**
@@ -136,13 +139,12 @@ class Controller
                         continue;
                     }
 
-                    $insertQuery[] = '(?, ?)';
+                    $insertQuery[] = '(?)';
                     $insertData[] = $data[0];
-                    $insertData[] = $data[1];
                 }
             }
 
-            $sql = "INSERT INTO tasks (name, is_complete) VALUES ";
+            $sql = "INSERT INTO tasks (name) VALUES ";
             $sql .= implode(', ', $insertQuery);
 
             try {
@@ -174,7 +176,7 @@ class Controller
             ]);
 
             if ($data = $statement->fetch(PDO::FETCH_ASSOC)) {
-                $this->dispatcher->setSession($data['name']);
+                $this->dispatcher->setSession($data);
 
                 return true;
             }
