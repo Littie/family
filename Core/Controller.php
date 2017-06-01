@@ -29,6 +29,46 @@ class Controller
         $this->dispatcher = $dispatcher;
     }
 
+    public function assign()
+    {
+        try {
+            $statement = $this->connection->prepare('UPDATE tasks SET user_id = :userId WHERE id = :taskId');
+            $statement->bindParam(':userId', $_POST['userId'], PDO::PARAM_INT);
+            $statement->bindParam(':taskId', $_POST['taskId'], PDO::PARAM_INT);
+            $statement->execute();
+        } catch (PDOException $ex) {
+            echo json_encode($ex->getMessage());
+        }
+    }
+
+    public function distribute()
+
+    {
+        $statement =
+            $this->connection->prepare("SELECT * FROM users");
+        $statement->execute();
+
+        try {
+            $users = $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $ex) {
+            $ex->getMessage();
+        }
+
+        $statement =
+            $this->connection->prepare("SELECT * FROM tasks WHERE user_id is null");
+        $statement->execute();
+
+        try {
+            $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $ex) {
+            $ex->getMessage();
+        }
+
+        $this->view->generate('distribute.php', [
+            'tasks'       => $tasks,
+            'users'        => $users,
+        ]);
+    }
     /**
      * Set task as complete.
      */

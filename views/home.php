@@ -7,7 +7,7 @@
                         <div class="col-sm-3"><h4>Home page</h4></div>
                         <?php if (in_array('distribute', $permissions)) { ?>
                         <div class="col-sm-4"><a href="/distribute" class="pull-right"><button class="btn btn-primary">Distribute</button></a></div>
-                        <?php } elseif (in_array('import', $permissions)) { ?>
+                        <?php } if (in_array('import', $permissions)) { ?>
                         <div class="col-sm-4"><a href="/upload" class="pull-right"><button class="btn btn-primary">Upload</button></a></div>
                         <?php } ?>
                         <div class="col-sm-5"><a href="/logout" class="pull-right"><button class="btn btn-primary">Logout</button></a></div>
@@ -24,13 +24,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($tasks as $row){ ?>
+                            <?php foreach ($tasks as $task) { ?>
                             <tr>
-                                <td><?= $row['id'] ?></td>
-                                <td><?= $row['name'] ?></td>
+                                <td><?= $task['id'] ?></td>
+                                <td><?= $task['name'] ?></td>
                                 <td><?= $user['name'] ?></td>
                                 <td>
-                                    <input type="checkbox" name="completed" value="<?= $row['is_complete'] ?>" <?php if ($row['is_complete']) {?> checked <?php } ?>>
+                                    <input type="checkbox" name="completed" value="<?= $task['is_complete'] ?>" <?php if ($task['is_complete']) {?> checked <?php } ?>>
                                 </td>
                             </tr>
                             <?php } ?>

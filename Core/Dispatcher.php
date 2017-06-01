@@ -157,7 +157,7 @@ class Dispatcher
     private function middleware()
     {
         return [
-            'home', 'upload',
+            'home', 'upload', 'distribute',
         ];
     }
 }
