@@ -173,7 +173,7 @@ class Controller
                 ":password" => md5($_POST['password'])
             ]);
 
-            if (null !== ($data = $statement->fetch(PDO::FETCH_ASSOC))) {
+            if ($data = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $this->dispatcher->setSession($data['name']);
 
                 return true;
