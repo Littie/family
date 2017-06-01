@@ -70,13 +70,20 @@ class Controller
     public function home()
     {
         $user = $this->dispatcher->resolveUser();
+        $permissions = $this->dispatcher->getPermissions();
 
-        $statement = $this->connection->prepare("SELECT * FROM tasks WHERE is_complete = 0 and user_id = " . $user[0]['id']);
+        $statement =
+            $this->connection->prepare("SELECT * FROM tasks WHERE is_complete = 0 and user_id = " . $user['id']);
         $statement->execute();
+
         $tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 
-        $this->view->generate('home.php', ['tasks' => $tasks, 'user' => $user[0]]);
+        $this->view->generate('home.php', [
+            'tasks'       => $tasks,
+            'user'        => $user,
+            'permissions' => $permissions,
+        ]);
     }
 
     /**

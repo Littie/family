@@ -25,12 +25,36 @@ class Dispatcher
         $this->uri = $this->parseUrl();
     }
 
+    public function getPermissions()
+    {
+        $user = $this->resolveUser();
+
+        $sql = "SELECT p.name from permission_user join users on permission_user.user_id = users.id " .
+            "left join permissions as p on p.id = permission_user.permission_id " .
+            "where user_id = " . $user['id'];
+
+        try {
+            $statement = $this->connection->prepare($sql);
+            $statement->execute();
+        } catch (PDOException $ex) {
+            $ex->getMessage();
+        }
+
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC)as $item) {
+            $permissions[] = $item['name'];
+        }
+
+        return $permissions;
+    }
+
     public function resolveUser()
     {
         $statement = $this->connection->prepare("SELECT * FROM users WHERE id = " . $_SESSION['user']['id']);
         $statement->execute();
 
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $user = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $user[0];
     }
 
     /**
