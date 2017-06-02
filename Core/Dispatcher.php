@@ -25,7 +25,12 @@ class Dispatcher
         $this->uri = $this->parseUrl();
     }
 
-    public function getPermissions()
+    /**
+     * Get user permissions.
+     *
+     * @return array
+     */
+    public function getPermissions(): array
     {
         $user = $this->resolveUser();
 
@@ -40,13 +45,18 @@ class Dispatcher
             $ex->getMessage();
         }
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC)as $item) {
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $item) {
             $permissions[] = $item['name'];
         }
 
         return $permissions;
     }
 
+    /**
+     * Return auth user.
+     *
+     * @return mixed
+     */
     public function resolveUser()
     {
         $statement = $this->connection->prepare("SELECT * FROM users WHERE id = " . $_SESSION['user']['id']);
@@ -88,6 +98,7 @@ class Dispatcher
     public function callController(Controller $controller, string $action = 'index')
     {
         $action = $this->resolveSession($action);
+//        $action = $this->resolveAccess($action);
 
         call_user_func_array([$controller, $action], []);
     }
@@ -120,6 +131,24 @@ class Dispatcher
     }
 
     /**
+     * Get access by permissions.
+     *
+     * @param string $action
+     *
+     * @return string
+     */
+    private function resolveAccess(string $action)
+    {
+        $map = $this->mapPermissions();
+
+        if (in_array($map[$action], $this->getPermissions())) {
+            return $action;
+        }
+
+        return 'home';
+    }
+
+    /**
      * Check if session data is set.
      *
      * @param string $action
@@ -149,6 +178,14 @@ class Dispatcher
         if (isset($uri)) {
             return explode('/', filter_var(trim($uri, '/')), FILTER_SANITIZE_URL);
         }
+    }
+
+    private function mapPermissions()
+    {
+        return [
+            'upload'     => 'import',
+            'distribute' => 'distribute',
+        ];
     }
 
     /**
