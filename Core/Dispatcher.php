@@ -45,6 +45,8 @@ class Dispatcher
             $ex->getMessage();
         }
 
+        $permissions = [];
+
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $item) {
             $permissions[] = $item['name'];
         }

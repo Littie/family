@@ -256,7 +256,7 @@ class Controller
 
             $user = $this->dispatcher->resolveUser();
 
-            if ($_POST['member'] === 3) {
+            if ((int) $user['member_id'] === 3) {
                 return true;
             }
 
@@ -296,5 +296,7 @@ class Controller
     public function redirect(string $path)
     {
         header("Location: /{$path}");
+
+        exit(0);
     }
 }
