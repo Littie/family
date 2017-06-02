@@ -252,7 +252,24 @@ class Controller
 
             $statement->execute();
 
-            $this->dispatcher->setSession($_POST['name']);
+            $this->loginUser();
+
+            $user = $this->dispatcher->resolveUser();
+
+            if ($_POST['member'] === 3) {
+                return true;
+            }
+
+            $statement = $this
+                ->connection
+                ->prepare("INSERT INTO permission_user (permission_id, user_id) VALUES (:permission_id, :user_id)");
+
+            $permission = (int) $user['member_id'] === 1 ? 2 : 1;
+
+            $statement->bindparam(":permission_id", $permission);
+            $statement->bindparam(":user_id", $user['id']);
+
+            $statement->execute();
 
             return true;
         } catch (PDOException $ex) {
