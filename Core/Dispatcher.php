@@ -98,7 +98,7 @@ class Dispatcher
     public function callController(Controller $controller, string $action = 'index')
     {
         $action = $this->resolveSession($action);
-//        $action = $this->resolveAccess($action);
+        $action = $this->resolveAccess($action);
 
         call_user_func_array([$controller, $action], []);
     }
@@ -139,13 +139,17 @@ class Dispatcher
      */
     private function resolveAccess(string $action)
     {
+        if (!in_array($action, $this->middleware('access'))) {
+            return $action;
+        }
+
         $map = $this->mapPermissions();
 
         if (in_array($map[$action], $this->getPermissions())) {
             return $action;
         }
 
-        return 'home';
+        header('Location: /home');
     }
 
     /**
@@ -157,9 +161,9 @@ class Dispatcher
      */
     private function resolveSession(string $action): string
     {
-        if (isset($_SESSION['user']) && !in_array($action, $this->middleware())) {
+        if (isset($_SESSION['user']) && !in_array($action, $this->middleware('auth'))) {
             header('Location: /home');
-        } elseif (!isset($_SESSION['user']) && in_array($action, $this->middleware())) {
+        } elseif (!isset($_SESSION['user']) && in_array($action, $this->middleware('auth'))) {
             header('Location: /index');
         }
 
@@ -189,12 +193,23 @@ class Dispatcher
     }
 
     /**
-     * Middleware for authorized pages.
+     * Middleware for pages access.
+     *
+     * @param string $part
+     *
+     * @return array
      */
-    private function middleware()
+    private function middleware(string $part): array
     {
-        return [
-            'home', 'upload', 'distribute',
+        $map = [
+            'auth'   => [
+                'home', 'upload', 'distribute',
+            ],
+            'access' => [
+                'upload', 'distribute',
+            ],
         ];
+
+        return $map[$part];
     }
 }
