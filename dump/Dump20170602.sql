@@ -1,6 +1,6 @@
--- MySQL dump 10.13  Distrib 5.7.18, for Linux (i686)
+-- MySQL dump 10.13  Distrib 5.7.18, for Linux (x86_64)
 --
--- Host: localhost    Database: family.local
+-- Host: localhost    Database: family
 -- ------------------------------------------------------
 -- Server version	5.7.18-0ubuntu0.16.04.1
 
@@ -62,7 +62,6 @@ CREATE TABLE `permission_user` (
 
 LOCK TABLES `permission_user` WRITE;
 /*!40000 ALTER TABLE `permission_user` DISABLE KEYS */;
-INSERT INTO `permission_user` VALUES (2,1),(1,2);
 /*!40000 ALTER TABLE `permission_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,7 +104,7 @@ CREATE TABLE `tasks` (
   PRIMARY KEY (`id`),
   KEY `task_user_fk_id_idx` (`user_id`),
   CONSTRAINT `task_user_fk_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,7 +113,6 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,'Task 1',0,1),(2,'Task 2',0,1),(3,'Task 3',0,1),(4,'Task 4',0,1),(5,'Task 5',0,1),(6,'Task 6',0,1),(7,'Task 7',0,2);
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +131,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   KEY `fk_users_1_idx` (`member_id`),
   CONSTRAINT `fk_users_1` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -142,7 +140,6 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Artem','4c34662d33294205b44b948e279f845b',1),(2,'Lesy','4c34662d33294205b44b948e279f845b',2);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -155,4 +152,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-02  3:22:42
+-- Dump completed on 2017-06-02 11:37:38
